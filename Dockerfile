@@ -81,6 +81,9 @@ LABEL image="build"
 # Copy the source
 COPY . ./
 
+# Copy packages into vendor
+RUN go mod vendor
+
 # Build the binaries
 RUN go build -o puller model-serving-puller/main.go
 RUN go build -o triton-adapter model-mesh-triton-adapter/main.go
