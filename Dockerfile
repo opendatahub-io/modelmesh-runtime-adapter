@@ -15,10 +15,10 @@
 ###############################################################################
 # Stage 1: Create the developer image for the BUILDPLATFORM only
 ###############################################################################
-ARG GOLANG_VERSION=1.17
+ARG GOLANG_VERSION=1.19
 FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi8/go-toolset:$GOLANG_VERSION AS develop
 
-ARG PROTOC_VERSION=21.5
+ARG PROTOC_VERSION=21.12
 
 USER root
 ENV HOME=/root
@@ -78,8 +78,9 @@ COPY go.mod go.sum ./
 
 # Install go protoc plugins
 ENV PATH $HOME/go/bin:$PATH
-RUN go get google.golang.org/protobuf/cmd/protoc-gen-go \
-           google.golang.org/grpc/cmd/protoc-gen-go-grpc \
+RUN go get google.golang.org/grpc/cmd/protoc-gen-go-grpc \
+    && go install google.golang.org/protobuf/cmd/protoc-gen-go \
+                  google.golang.org/grpc/cmd/protoc-gen-go-grpc \
     && protoc-gen-go --version \
     && true
 
