@@ -238,6 +238,11 @@ issues:
       linters:
         - gosec
 
+    # Exclude some typecheck messages
+    - linters:
+        - typecheck
+      text: "use of internal package github.com/kserve/modelmesh-runtime-adapter/internal"
+
     # Exclude some staticcheck messages
     - linters:
         - staticcheck

@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.#
 
+if [ "${PWD}" == "/opt/app" ]; then
+  git config --global --add safe.directory "*"
+fi
+
 pre-commit run --all-files
 RETURN_CODE=$?
 
