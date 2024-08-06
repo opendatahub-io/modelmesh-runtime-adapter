@@ -148,7 +148,10 @@ func (r *s3RepositoryClient) Pull(ctx context.Context, pc pullman.PullCommand) e
 					relativePath = path.Base(objPath)
 				}
 			}
+
 			filePath, joinErr := util.SecureJoin(destDir, localPath, relativePath)
+			r.log.V(1).Info("destination file path", "filePath", filePath, "destDir", destDir, "localPath", localPath, "relativePath", relativePath)
+
 			if joinErr != nil {
 				return fmt.Errorf("error joining filepaths '%s' and '%s': %w", pt.LocalPath, relativePath, joinErr)
 			}

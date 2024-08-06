@@ -93,7 +93,9 @@ func (s *TritonAdapterServer) LoadModel(ctx context.Context, req *mmesh.LoadMode
 	modelType := getModelType(req, log)
 	log.Info("Using model type", "model_type", modelType)
 
+	log.Info("LoadModel ==>>> ", "UseEmbeddedPuller", s.AdapterConfig.UseEmbeddedPuller)
 	if s.AdapterConfig.UseEmbeddedPuller {
+		log.Info("LoadModel ==>>> using UseEmbeddedPuller")
 		var pullerErr error
 		req, pullerErr = s.Puller.ProcessLoadModelRequest(ctx, req)
 		if pullerErr != nil {
@@ -101,12 +103,13 @@ func (s *TritonAdapterServer) LoadModel(ctx context.Context, req *mmesh.LoadMode
 			return nil, pullerErr
 		}
 	}
-
+	log.Info("LoadModel ==>>> ", "req", req)
 	var err error
 	schemaPath, err := util.GetSchemaPath(req)
 	if err != nil {
 		return nil, err
 	}
+	log.Info("LoadModel ==>>> ", "schemaPath", schemaPath)
 
 	// using the files downloaded by the puller, create a file layout that the runtime can understand and load from
 	err = adaptModelLayoutForRuntime(ctx, s.AdapterConfig.RootModelDir, req.ModelId, modelType, req.ModelPath, schemaPath, log)

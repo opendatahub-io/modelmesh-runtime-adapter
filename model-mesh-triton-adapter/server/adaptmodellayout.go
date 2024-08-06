@@ -58,9 +58,13 @@ var modelTypeToFileNameMapping = map[string]string{
 
 func adaptModelLayoutForRuntime(ctx context.Context, rootModelDir, modelID, modelType, modelPath, schemaPath string, log logr.Logger) error {
 	// convert to lower case and remove anything after the :
+	log.Info("adaptModelLayoutForRuntime===>>>", "rootModelDir", rootModelDir, "modelID", modelID, "modelType", modelType, "modelPath", modelPath, "schemaPath", schemaPath)
+
 	modelType = strings.ToLower(strings.Split(modelType, ":")[0])
 
 	tritonModelIDDir, err := util.SecureJoin(rootModelDir, modelID)
+	log.Info("adaptModelLayoutForRuntime===>>>", "tritonModelIDDir", tritonModelIDDir)
+
 	if err != nil {
 		log.Error(err, "Unable to securely join", "rootModelDir", rootModelDir, "modelID", modelID)
 		return err
@@ -96,18 +100,23 @@ func adaptModelLayoutForRuntime(ctx context.Context, rootModelDir, modelID, mode
 		modelPath = convertedFilename
 	}
 
+	log.Info("adaptModelLayoutForRuntime===>>>", "modelPathInfo", modelPathInfo)
 	if !modelPathInfo.IsDir() {
+		log.Info("adaptModelLayoutForRuntime===>>> modelPathInfo is not a dir")
 		// simple case if ModelPath points to a file
 		err = createTritonModelRepositoryFromPath(modelPath, "1", schemaPath, modelType, tritonModelIDDir, log)
 	} else {
+		log.Info("adaptModelLayoutForRuntime===>>> modelPathInfo is dir")
 		files, err1 := os.ReadDir(modelPath)
 		if err1 != nil {
 			return fmt.Errorf("Could not read files in dir %s: %w", modelPath, err1)
 		}
 
 		if isTritonModelRepository(files) {
+			log.Info("adaptModelLayoutForRuntime===>>> files is not a isTritonModelRepository")
 			err = adaptNativeModelLayout(files, modelPath, schemaPath, tritonModelIDDir, log)
 		} else {
+			log.Info("adaptModelLayoutForRuntime===>>> files is isTritonModelRepository")
 			err = createTritonModelRepositoryFromDirectory(files, modelPath, schemaPath, modelType, tritonModelIDDir, log)
 		}
 	}
