@@ -16,6 +16,7 @@
 # Stage 1: Create the developer image for the BUILDPLATFORM only
 ###############################################################################
 ARG GOLANG_VERSION=1.21
+ARG BUILD_BASE=develop
 FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi8/go-toolset:$GOLANG_VERSION AS develop
 
 ARG PROTOC_VERSION=21.5
@@ -77,6 +78,8 @@ RUN set -eux; \
 WORKDIR /opt/app
 
 COPY go.mod go.sum ./
+# Download dependencies before copying the source so they will be cached
+RUN go mod download
 
 # Install go protoc plugins
 # no required module provides package google.golang.org/grpc/cmd/protoc-gen-go-grpc
@@ -98,8 +101,6 @@ RUN git init && \
     git config --global --add safe.directory "*" && \
     rm -rf .git
 
-# Download dependencies before copying the source so they will be cached
-RUN go mod download
 
 # the ubi/go-toolset image doesn't define ENTRYPOINT or CMD, but we need it to run 'make develop'
 CMD /bin/bash
@@ -108,9 +109,17 @@ CMD /bin/bash
 ###############################################################################
 # Stage 2: Run the go build with BUILDPLATFORM's native go compiler
 ###############################################################################
-FROM --platform=$BUILDPLATFORM develop AS build
+FROM --platform=$BUILDPLATFORM $BUILD_BASE AS build
 
 LABEL image="build"
+
+USER root
+
+# needed for konflux as the previous stage is not used
+WORKDIR /opt/app
+COPY go.mod go.sum ./
+# Download dependencies before copying the source so they will be cached
+RUN go mod download
 
 # Copy the source
 COPY . ./
@@ -146,7 +155,7 @@ USER root
 # install python to convert keras to tf
 # NOTE: tensorflow not supported on PowerPC (ppc64le) or System Z (s390x) https://github.com/tensorflow/tensorflow/issues/46181
 RUN --mount=type=cache,target=/root/.cache/microdnf:rw \
-    microdnf install --setopt=cachedir=/root/.cache/microdnf \
+    microdnf install --setopt=cachedir=/root/.cache/microdnf --setopt=ubi-8-appstream-rpms.module_hotfixes=1 \
        gcc \
        gcc-c++ \
        python38-devel \
@@ -157,17 +166,11 @@ RUN --mount=type=cache,target=/root/.cache/microdnf:rw \
 
 # need to upgrade pip and install wheel before installing grpcio, before installing tensorflow on aarch64
 # use caching to speed up multi-platform builds
+COPY requirements.txt requirements.txt
 ENV PIP_CACHE_DIR=/root/.cache/pip
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip && \
-    pip install wheel && \
-    pip install grpcio && \
-    # pin to 3.10.0 to avoid error: libhdf5.so: cannot open shared object file: No such file or directory \
-    # if not version is set, it will install the 3.11.0 version which, seems that does not have the h5py dependencies \
-    # for arm yet.
-    pip install h5py==3.10.0 && \
-    pip install tensorflow
-
+    pip install -r requirements.txt
+RUN rm -rfv requirements.txt
 USER ${USER}
 
 # Add modelmesh version
