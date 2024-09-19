@@ -27,7 +27,7 @@ all: build
 .PHONY: build
 ## Build runtime Docker image
 build:
-	./scripts/build_docker.sh --target runtime
+	./scripts/build_docker.sh --target builder --target runtime
 
 .PHONY: build.develop
 ## Build developer container image

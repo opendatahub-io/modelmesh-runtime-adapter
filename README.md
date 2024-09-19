@@ -194,3 +194,33 @@ modelmesh-controller-64f5c8d6d6-k6rzc            kserve/modelmesh-controller:lat
 modelmesh-serving-mlserver-1.x-84884c6849-s8dw6  kserve/rest-proxy:latest, seldonio/mlserver:1.3.2, your-docker-userid/modelmesh-runtime-adapter:dev, kserve/modelmesh:latest
 modelmesh-serving-mlserver-1.x-84884c6849-xpdw4  kserve/rest-proxy:latest, seldonio/mlserver:1.3.2, your-docker-userid/modelmesh-runtime-adapter:dev, kserve/modelmesh:latest
 ```
+
+# Konflux build system Files
+
+This directory holds the requirements.txt file use in the Konflux builds to pre-fetch the required packages.
+
+Here are two files that we need to keep:
+
+- **requirements.txt**: is the result of the `pip freeze` command (see example below).
+
+## How to update the requirements.txt file
+
+Once the final container is built, you can access it:
+
+```bash
+podman run <modelmesh-runtime-adapter-container-name> sh -c 'pip freeze'
+```
+
+Note, for `tensorflow-io-gcs-filesystem` it must be pinned to **0.34.0** manually after generating the `requirements.txt` file.`
+
+Then commit the changes and push.
+
+# Konflux configuration
+
+Build configuration, it requires the build be configured as follows:
+
+```yaml
+- name: prefetch-input
+  value: |
+    [{"type": "gomod"}, {"type": "rpm"}, {"type": "pip", "path": ".", "requirements_files": ["requirements.txt"], "allow_binary": "true"}]
+```
