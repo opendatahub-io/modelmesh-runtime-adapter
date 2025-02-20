@@ -15,6 +15,9 @@
 # make builder configurable, default to docker.
 ENGINE ?= docker
 
+# make builder configurable, default to docker.
+ENGINE ?= docker
+
 # collect args from `make run` so that they don't run twice
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
