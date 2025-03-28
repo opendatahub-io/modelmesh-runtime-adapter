@@ -161,10 +161,11 @@ RUN --mount=type=cache,target=/root/.cache/microdnf:rw \
        gcc-c++ \
        python3.11-devel \
        python3.11 \
-       python3.11-pip \
-    && alternatives --install /usr/bin/python python /usr/bin/python3.11 1 \
+       python3.11-pip
+RUN  alternatives --install /usr/bin/unversioned-python python /usr/bin/python3.11 1 \ 
+    && ln -sf /usr/bin/unversioned-python /usr/bin/python \
     && alternatives --install /usr/bin/pip pip /usr/bin/pip3.11 1 \
-    && true
+    && python --version
 
 # need to upgrade pip and install wheel before installing grpcio, before installing tensorflow on aarch64
 # use caching to speed up multi-platform builds
