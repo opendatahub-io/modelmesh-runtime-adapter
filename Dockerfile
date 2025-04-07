@@ -162,7 +162,7 @@ RUN --mount=type=cache,target=/root/.cache/microdnf:rw \
        python3.11-devel \
        python3.11 \
        python3.11-pip \
-    && alternatives --set python /usr/bin/python3.11 \
+    && alternatives --install /usr/bin/unversioned-python python /usr/bin/python3.11 1 \
     && alternatives --install /usr/bin/pip pip /usr/bin/pip3.11 1 \
     && true
 
