@@ -71,7 +71,7 @@ require (
 )
 
 replace (
-	// Fixes CVE-2024-45337
+	// Fixes CVE-2024-45338
 	golang.org/x/net => golang.org/x/net v0.33.0
 	// remove when upgrade to controller-runtime 0.15.x or apimachinery to 0.27.x
 	// Fixes SNYK-GOLANG-K8SIOAPIMACHINERYPKGUTILRUNTIME-8367153
