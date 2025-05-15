@@ -15,7 +15,7 @@
 ###############################################################################
 # Stage 1: Create the developer image for the BUILDPLATFORM only
 ###############################################################################
-ARG GOLANG_VERSION=1.22
+ARG GOLANG_VERSION=1.23
 ARG BUILD_BASE=develop
 FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi9/go-toolset:$GOLANG_VERSION AS develop
 
