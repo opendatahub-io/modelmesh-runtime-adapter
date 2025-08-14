@@ -24,8 +24,7 @@ require (
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
-	cloud.google.com/go/compute v1.19.1 // indirect
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	cloud.google.com/go/iam v0.13.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.21.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v0.9.1 // indirect
@@ -73,6 +72,8 @@ require (
 replace (
 	// Fixes CVE-2024-45337
 	golang.org/x/net => golang.org/x/net v0.33.0
+	// Fixes CVE-2025-22868
+	golang.org/x/oauth2 => golang.org/x/oauth2 v0.27.0
 	// remove when upgrade to controller-runtime 0.15.x or apimachinery to 0.27.x
 	// Fixes SNYK-GOLANG-K8SIOAPIMACHINERYPKGUTILRUNTIME-8367153
 	k8s.io/apimachinery => k8s.io/apimachinery v0.29.0
