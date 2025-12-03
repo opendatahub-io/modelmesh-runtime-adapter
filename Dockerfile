@@ -83,16 +83,15 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Install go protoc plugins
-# no required module provides package google.golang.org/grpc/cmd/protoc-gen-go-grpc
-# to add it run `go get google.golang.org/grpc/cmd/protoc-gen-go-grpc`
+# protoc-gen-go-grpc is a separate module with its own versioning (not the same as grpc)
+# v1.5.1 is the last version compatible with Go 1.23; v1.6.0+ requires Go 1.24+
 ENV GOPATH $HOME/go
 ENV PATH $GOPATH/bin:$PATH
 RUN true \
-    && go get google.golang.org/grpc/cmd/protoc-gen-go-grpc \
     && go install google.golang.org/protobuf/cmd/protoc-gen-go \
-                  google.golang.org/grpc/cmd/protoc-gen-go-grpc \
+    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1 \
     && protoc-gen-go --version \
-    && true
+    && protoc-gen-go-grpc --version
 
 # Download and initialize the pre-commit environments before copying the source so they will be cached
 COPY .pre-commit-config.yaml ./
