@@ -1,6 +1,6 @@
 module github.com/kserve/modelmesh-runtime-adapter
 
-go 1.23.6
+go 1.24
 
 require (
 	cloud.google.com/go/storage v1.28.1
