@@ -13,7 +13,7 @@ h5py==3.12.0
 idna==3.10
 keras==3.13.2
 libclang==18.1.1
-Markdown==3.8
+Markdown==3.8.1
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
