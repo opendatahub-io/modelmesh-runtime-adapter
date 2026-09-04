@@ -1,6 +1,6 @@
 module github.com/kserve/modelmesh-runtime-adapter
 
-go 1.25.5
+go 1.26.7
 
 require (
 	cloud.google.com/go/storage v1.36.0
@@ -14,7 +14,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/zap v1.24.0
-	golang.org/x/sync v0.20.0
+	golang.org/x/sync v0.22.0
 	google.golang.org/api v0.170.0
 	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
@@ -58,11 +58,11 @@ require (
 	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.49.0 // indirect
-	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/crypto v0.54.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
-	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/genproto v0.0.0-20240205150955-31a09d347014 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20251202230838-ff82c1b0f217 // indirect
@@ -80,3 +80,6 @@ require (
 // remove when upgrade to controller-runtime 0.15.x or apimachinery to 0.27.x
 // Fixes SNYK-GOLANG-K8SIOAPIMACHINERYPKGUTILRUNTIME-8367153
 replace k8s.io/apimachinery => k8s.io/apimachinery v0.29.0
+
+// CVE-2026-33814: Go HTTP/2: Denial of Service via malformed SETTINGS_MAX_FRAME_SIZE frame
+replace golang.org/x/net => golang.org/x/net v0.57.0
